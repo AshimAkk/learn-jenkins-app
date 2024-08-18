@@ -4,6 +4,7 @@ pipeline {
     environment {
         NETLIFY_SITE_ID = 'c0d35b04-6b30-4918-9973-c642ac725cd2'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+
     }
 
     stages {
@@ -68,6 +69,25 @@ pipeline {
             }
         }
         
+        stage('Prod E2E') {
+              agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+
+              environment {
+                    CI_ENVIRONMENT_URL = 'https://spectacular-gumdrop-1fa3b7.netlify.app'
+        
+    }
+            steps {
+                sh '''
+                npx playwright test --reporter=line
+                '''
+               
+            }
+        }
     }
 
     post {
