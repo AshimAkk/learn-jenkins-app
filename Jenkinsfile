@@ -67,6 +67,11 @@ pipeline {
                 '''
             }
         }
+        stage('Approval') {
+            steps {
+                input message: 'Do you wish to deploy to production?', ok: 'Yes, I am Sure!'
+            }
+        }
 
        
         stage('Deploy prod') {
